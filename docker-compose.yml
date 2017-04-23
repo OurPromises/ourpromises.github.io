@@ -1,0 +1,13 @@
+version: '3'
+services:
+  app:
+    image: netlify/build
+    env_file: .env
+    volumes:
+      - ./code/website:/opt/repo
+    working_dir: /opt/repo
+    ports: 
+      - 1313:1313
+    command: hugo server --bind=0.0.0.0
+    environment:
+      HUGO_BASE_URL: "http://localhost:1313"
