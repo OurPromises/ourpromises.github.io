@@ -2,6 +2,6 @@ backend:
   name: github
   repo: OurPromises/ourpromises.github.io # Path to your Github repository
   branch: develop # Branch to update
-  site_domain: ourpromises.github.io # Your Netlify site address if different from host
+  site_domain: www.ourpromises.io # Your Netlify site address if different from host
 media_folder: "static/images/uploads"
 public_folder: "/images/uploads"
