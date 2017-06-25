@@ -5,7 +5,7 @@ services:
     # env_file: .env
     volumes:
       - ./code/src:/opt/src
-      - ./docs:/opt/build
+      - .:/opt/build
     working_dir: /opt/src
     ports: 
       - 1313:1313

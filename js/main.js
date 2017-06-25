@@ -1,474 +1,414 @@
-;(function () {
-	
-	'use strict';
+/*
+  Dimension by HTML5 UP
+  html5up.net | @ajlkn
+  Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+*/
 
+(function($) {
 
+  skel.breakpoints({
+    xlarge:   '(max-width: 1680px)',
+    large:    '(max-width: 1280px)',
+    medium:   '(max-width: 980px)',
+    small:    '(max-width: 736px)',
+    xsmall:   '(max-width: 480px)',
+    xxsmall:  '(max-width: 360px)'
+  });
 
-	// iPad and iPod detection	
-	var isiPad = function(){
-		return (navigator.platform.indexOf("iPad") != -1);
-	};
+  $(function() {
 
-	var isiPhone = function(){
-	    return (
-			(navigator.platform.indexOf("iPhone") != -1) || 
-			(navigator.platform.indexOf("iPod") != -1)
-	    );
-	};
+    var $window = $(window),
+      $body = $('body'),
+      $wrapper = $('#wrapper'),
+      $header = $('#header'),
+      $footer = $('#footer'),
+      $languages = $('#languages'),
+      $main = $('#main'),
+      $main_articles = $main.children('article');
 
-	// Parallax
-	var parallax = function() {
-		$(window).stellar();
-	};
+    // Disable animations/transitions until the page has loaded.
+      $body.addClass('is-loading');
 
+      $window.on('load', function() {
+        window.setTimeout(function() {
+          $body.removeClass('is-loading');
+        }, 100);
+      });
 
+    // Fix: Placeholder polyfill.
+      $('form').placeholder();
 
-	// Burger Menu
-	var burgerMenu = function() {
+    // Fix: Flexbox min-height bug on IE.
+      if (skel.vars.IEVersion < 12) {
 
-		$('body').on('click', '.js-fh5co-nav-toggle', function(event){
+        var flexboxFixTimeoutId;
 
-			event.preventDefault();
+        $window.on('resize.flexbox-fix', function() {
 
-			if ( $('#navbar').is(':visible') ) {
-				$(this).removeClass('active');
-			} else {
-				$(this).addClass('active');	
-			}
+          clearTimeout(flexboxFixTimeoutId);
 
-			
-			
-		});
+          flexboxFixTimeoutId = setTimeout(function() {
 
-	};
+            if ($wrapper.prop('scrollHeight') > $window.height())
+              $wrapper.css('height', 'auto');
+            else
+              $wrapper.css('height', '100vh');
 
+          }, 250);
 
-	var goToTop = function() {
+        }).triggerHandler('resize.flexbox-fix');
 
-		$('.js-gotop').on('click', function(event){
-			
-			event.preventDefault();
+      }
 
-			$('html, body').animate({
-				scrollTop: $('html').offset().top
-			}, 500);
-			
-			return false;
-		});
-	
-	};
+    // Nav.
+      var $nav = $header.children('nav'),
+        $nav_li = $nav.find('li');
 
+      // Add "middle" alignment classes if we're dealing with an even number of items.
+        if ($nav_li.length % 2 == 0) {
 
-	// Page Nav
-	var clickMenu = function() {
+          $nav.addClass('use-middle');
+          $nav_li.eq( ($nav_li.length / 2) ).addClass('is-middle');
 
-		$('#navbar a:not([class="external"])').click(function(event){
-			var section = $(this).data('nav-section'),
-				navbar = $('#navbar');
+        }
 
-				if ( $('[data-section="' + section + '"]').length ) {
-			    	$('html, body').animate({
-			        	scrollTop: $('[data-section="' + section + '"]').offset().top
-			    	}, 500);
-			   }
+    // Main.
+      var delay = 325,
+        locked = false;
 
-		    if ( navbar.is(':visible')) {
-		    	navbar.removeClass('in');
-		    	navbar.attr('aria-expanded', 'false');
-		    	$('.js-fh5co-nav-toggle').removeClass('active');
-		    }
+      // Methods.
+        $main._show = function(id, initial) {
 
-		    event.preventDefault();
-		    return false;
-		});
+          var $article = $main_articles.filter('#' + id);
 
+          // No such article? Bail.
+            if ($article.length == 0)
+              return;
 
-	};
+          // Handle lock.
 
-	// Reflect scrolling in navigation
-	var navActive = function(section) {
+            // Already locked? Speed through "show" steps w/o delays.
+              if (locked || (typeof initial != 'undefined' && initial === true)) {
 
-		var $el = $('#navbar > ul');
-		$el.find('li').removeClass('active');
-		$el.each(function(){
-			$(this).find('a[data-nav-section="'+section+'"]').closest('li').addClass('active');
-		});
+                // Mark as switching.
+                  $body.addClass('is-switching');
 
-	};
+                // Mark as visible.
+                  $body.addClass('is-article-visible');
 
-	var navigationSection = function() {
+                // Deactivate all articles (just in case one's already active).
+                  $main_articles.removeClass('active');
 
-		var $section = $('section[data-section]');
-		
-		$section.waypoint(function(direction) {
-		  	
-		  	if (direction === 'down') {
-		    	navActive($(this.element).data('section'));
-		  	}
-		}, {
-	  		offset: '150px'
-		});
-
-		$section.waypoint(function(direction) {
-		  	if (direction === 'up') {
-		    	navActive($(this.element).data('section'));
-		  	}
-		}, {
-		  	offset: function() { return -$(this.element).height() + 155; }
-		});
-
-	};
-
-
-	
-
-
-	// Window Scroll
-	var windowScroll = function() {
-		var lastScrollTop = 0;
-
-		$(window).scroll(function(event){
-
-		   	var header = $('#fh5co-header'),
-				scrlTop = $(this).scrollTop();
-
-			if ( scrlTop > 500 && scrlTop <= 2000 ) {
-				header.addClass('navbar-fixed-top fh5co-animated slideInDown');
-			} else if ( scrlTop <= 500) {
-				if ( header.hasClass('navbar-fixed-top') ) {
-					header.addClass('navbar-fixed-top fh5co-animated slideOutUp');
-					setTimeout(function(){
-						header.removeClass('navbar-fixed-top fh5co-animated slideInDown slideOutUp');
-					}, 100 );
-				}
-			} 
-			
-		});
-	};
-
-
-
-	// Animations
-	// Home
-
-	var homeAnimate = function() {
-		if ( $('#fh5co-home').length > 0 ) {	
-
-			$('#fh5co-home').waypoint( function( direction ) {
-										
-				if( direction === 'down' && !$(this.element).hasClass('animated') ) {
-
-
-					setTimeout(function() {
-						$('#fh5co-home .to-animate').each(function( k ) {
-							var el = $(this);
-							
-							setTimeout ( function () {
-								el.addClass('fadeInUp animated');
-							},  k * 200, 'easeInOutExpo' );
-							
-						});
-					}, 200);
-
-					
-					$(this.element).addClass('animated');
-						
-				}
-			} , { offset: '80%' } );
-
-		}
-	};
-
-
-	var introAnimate = function() {
-		if ( $('#fh5co-intro').length > 0 ) {	
-
-			$('#fh5co-intro').waypoint( function( direction ) {
-										
-				if( direction === 'down' && !$(this.element).hasClass('animated') ) {
-
-
-					setTimeout(function() {
-						$('#fh5co-intro .to-animate').each(function( k ) {
-							var el = $(this);
-							
-							setTimeout ( function () {
-								el.addClass('fadeInRight animated');
-							},  k * 200, 'easeInOutExpo' );
-							
-						});
-					}, 1000);
-
-					
-					$(this.element).addClass('animated');
-						
-				}
-			} , { offset: '80%' } );
-
-		}
-	};
-
-	var workAnimate = function() {
-		if ( $('#fh5co-work').length > 0 ) {	
-
-			$('#fh5co-work').waypoint( function( direction ) {
-										
-				if( direction === 'down' && !$(this.element).hasClass('animated') ) {
-
-
-					setTimeout(function() {
-						$('#fh5co-work .to-animate').each(function( k ) {
-							var el = $(this);
-							
-							setTimeout ( function () {
-								el.addClass('fadeInUp animated');
-							},  k * 200, 'easeInOutExpo' );
-							
-						});
-					}, 200);
-
-					
-					$(this.element).addClass('animated');
-						
-				}
-			} , { offset: '80%' } );
-
-		}
-	};
-
-
-	var testimonialAnimate = function() {
-		var testimonial = $('#fh5co-testimonials');
-		if ( testimonial.length > 0 ) {	
-
-			testimonial.waypoint( function( direction ) {
-										
-				if( direction === 'down' && !$(this.element).hasClass('animated') ) {
-
-					var sec = testimonial.find('.to-animate').length,
-						sec = parseInt((sec * 200) - 400);
-
-					setTimeout(function() {
-						testimonial.find('.to-animate').each(function( k ) {
-							var el = $(this);
-							
-							setTimeout ( function () {
-								el.addClass('fadeInUp animated');
-							},  k * 200, 'easeInOutExpo' );
-							
-						});
-					}, 200);
-
-					setTimeout(function() {
-						testimonial.find('.to-animate-2').each(function( k ) {
-							var el = $(this);
-							
-							setTimeout ( function () {
-								el.addClass('fadeInDown animated');
-							},  k * 200, 'easeInOutExpo' );
-							
-						});
-					}, sec);
-
-					
-					$(this.element).addClass('animated');
-						
-				}
-			} , { offset: '80%' } );
-
-		}
-	};
-
-	var servicesAnimate = function() {
-		var services = $('#fh5co-services');
-		if ( services.length > 0 ) {	
-
-			services.waypoint( function( direction ) {
-										
-				if( direction === 'down' && !$(this.element).hasClass('animated') ) {
-
-					var sec = services.find('.to-animate').length,
-						sec = parseInt((sec * 200) + 400);
-
-					setTimeout(function() {
-						services.find('.to-animate').each(function( k ) {
-							var el = $(this);
-							
-							setTimeout ( function () {
-								el.addClass('fadeInUp animated');
-							},  k * 200, 'easeInOutExpo' );
-							
-						});
-					}, 200);
-
-					setTimeout(function() {
-						services.find('.to-animate-2').each(function( k ) {
-							var el = $(this);
-							
-							setTimeout ( function () {
-								el.addClass('bounceIn animated');
-							},  k * 200, 'easeInOutExpo' );
-							
-						});
-					}, sec);
-
-
-					
-					$(this.element).addClass('animated');
-						
-				}
-			} , { offset: '80%' } );
-
-		}
-	};
-
-	var aboutAnimate = function() {
-		var about = $('#fh5co-about');
-		if ( about.length > 0 ) {	
-
-			about.waypoint( function( direction ) {
-										
-				if( direction === 'down' && !$(this.element).hasClass('animated') ) {
-
-
-					setTimeout(function() {
-						about.find('.to-animate').each(function( k ) {
-							var el = $(this);
-							
-							setTimeout ( function () {
-								el.addClass('fadeInUp animated');
-							},  k * 200, 'easeInOutExpo' );
-							
-						});
-					}, 200);
-
-					
-
-					$(this.element).addClass('animated');
-						
-				}
-			} , { offset: '80%' } );
-
-		}
-	};
-
-	var countersAnimate = function() {
-		var counters = $('#fh5co-counters');
-		if ( counters.length > 0 ) {	
-
-			counters.waypoint( function( direction ) {
-										
-				if( direction === 'down' && !$(this.element).hasClass('animated') ) {
-
-					var sec = counters.find('.to-animate').length,
-						sec = parseInt((sec * 200) + 400);
-
-					setTimeout(function() {
-						counters.find('.to-animate').each(function( k ) {
-							var el = $(this);
-							
-							setTimeout ( function () {
-								el.addClass('fadeInUp animated');
-							},  k * 200, 'easeInOutExpo' );
-							
-						});
-					}, 200);
-
-					setTimeout(function() {
-						counters.find('.js-counter').countTo({
-						 	formatter: function (value, options) {
-				      		return value.toFixed(options.decimals);
-				   		},
-						});
-					}, 400);
-
-					setTimeout(function() {
-						counters.find('.to-animate-2').each(function( k ) {
-							var el = $(this);
-							
-							setTimeout ( function () {
-								el.addClass('bounceIn animated');
-							},  k * 200, 'easeInOutExpo' );
-							
-						});
-					}, sec);
-
-					
-
-					
-
-					$(this.element).addClass('animated');
-						
-				}
-			} , { offset: '80%' } );
-
-		}
-	};
-
-
-	var contactAnimate = function() {
-		var contact = $('#fh5co-contact');
-		if ( contact.length > 0 ) {	
-
-			contact.waypoint( function( direction ) {
-										
-				if( direction === 'down' && !$(this.element).hasClass('animated') ) {
-
-					setTimeout(function() {
-						contact.find('.to-animate').each(function( k ) {
-							var el = $(this);
-							
-							setTimeout ( function () {
-								el.addClass('fadeInUp animated');
-							},  k * 200, 'easeInOutExpo' );
-							
-						});
-					}, 200);
-
-					$(this.element).addClass('animated');
-						
-				}
-			} , { offset: '80%' } );
-
-		}
-	};
-
-
-	
-	
-
-
-	
-	
-
-	// Document on load.
-	$(function(){
-
-		parallax();
-
-		burgerMenu();
-
-		clickMenu();
-
-		windowScroll();
-
-		navigationSection();
-
-		goToTop();
-
-
-		// Animations
-		homeAnimate();
-		introAnimate();
-		workAnimate();
-		testimonialAnimate();
-		servicesAnimate();
-		aboutAnimate();
-		countersAnimate();
-		contactAnimate();
-		
-
-	});
-
-
-}());
+                // Hide header, footer, languages.
+                  $header.hide();
+                  $footer.hide();
+                  $languages.hide();
+
+                // Show main, article.
+                  $main.show();
+                  $article.show();
+
+                // Activate article.
+                  $article.addClass('active');
+
+                // Unlock.
+                  locked = false;
+
+                // Unmark as switching.
+                  setTimeout(function() {
+                    $body.removeClass('is-switching');
+                  }, (initial ? 1000 : 0));
+
+                return;
+
+              }
+
+            // Lock.
+              locked = true;
+
+          // Article already visible? Just swap articles.
+            if ($body.hasClass('is-article-visible')) {
+
+              // Deactivate current article.
+                var $currentArticle = $main_articles.filter('.active');
+
+                $currentArticle.removeClass('active');
+
+              // Show article.
+                setTimeout(function() {
+
+                  // Hide current article.
+                    $currentArticle.hide();
+
+                  // Show article.
+                    $article.show();
+
+                  // Activate article.
+                    setTimeout(function() {
+
+                      $article.addClass('active');
+
+                      // Window stuff.
+                        $window
+                          .scrollTop(0)
+                          .triggerHandler('resize.flexbox-fix');
+
+                      // Unlock.
+                        setTimeout(function() {
+                          locked = false;
+                        }, delay);
+
+                    }, 25);
+
+                }, delay);
+
+            }
+
+          // Otherwise, handle as normal.
+            else {
+
+              // Mark as visible.
+                $body
+                  .addClass('is-article-visible');
+
+              // Show article.
+                setTimeout(function() {
+
+                  // Hide header, footer, languages.
+                    $header.hide();
+                    $footer.hide();
+                    $languages.hide();
+
+                  // Show main, article.
+                    $main.show();
+                    $article.show();
+
+                  // Activate article.
+                    setTimeout(function() {
+
+                      $article.addClass('active');
+
+                      // Window stuff.
+                        $window
+                          .scrollTop(0)
+                          .triggerHandler('resize.flexbox-fix');
+
+                      // Unlock.
+                        setTimeout(function() {
+                          locked = false;
+                        }, delay);
+
+                    }, 25);
+
+                }, delay);
+
+            }
+
+        };
+
+        $main._hide = function(addState) {
+
+          var $article = $main_articles.filter('.active');
+
+          // Article not visible? Bail.
+            if (!$body.hasClass('is-article-visible'))
+              return;
+
+          // Add state?
+            if (typeof addState != 'undefined'
+            &&  addState === true)
+              history.pushState(null, null, '#');
+
+          // Handle lock.
+
+            // Already locked? Speed through "hide" steps w/o delays.
+              if (locked) {
+
+                // Mark as switching.
+                  $body.addClass('is-switching');
+
+                // Deactivate article.
+                  $article.removeClass('active');
+
+                // Hide article, main.
+                  $article.hide();
+                  $main.hide();
+
+                // Show footer, header.
+                  $footer.show();
+                  $header.show();
+                  $languages.show();
+
+                // Unmark as visible.
+                  $body.removeClass('is-article-visible');
+
+                // Unlock.
+                  locked = false;
+
+                // Unmark as switching.
+                  $body.removeClass('is-switching');
+
+                // Window stuff.
+                  $window
+                    .scrollTop(0)
+                    .triggerHandler('resize.flexbox-fix');
+
+                return;
+
+              }
+
+            // Lock.
+              locked = true;
+
+          // Deactivate article.
+            $article.removeClass('active');
+
+          // Hide article.
+            setTimeout(function() {
+
+              // Hide article, main.
+                $article.hide();
+                $main.hide();
+
+              // Show footer, header.
+                $footer.show();
+                $header.show();
+                $languages.show();
+
+              // Unmark as visible.
+                setTimeout(function() {
+
+                  $body.removeClass('is-article-visible');
+
+                  // Window stuff.
+                    $window
+                      .scrollTop(0)
+                      .triggerHandler('resize.flexbox-fix');
+
+                  // Unlock.
+                    setTimeout(function() {
+                      locked = false;
+                    }, delay);
+
+                }, 25);
+
+            }, delay);
+
+
+        };
+
+      // Articles.
+        $main_articles.each(function() {
+
+          var $this = $(this);
+
+          // Close.
+            $('<div class="close">Close</div>')
+              .appendTo($this)
+              .on('click', function() {
+                location.hash = '';
+              });
+
+          // Prevent clicks from inside article from bubbling.
+            $this.on('click', function(event) {
+              event.stopPropagation();
+            });
+
+        });
+
+      // Events.
+        $body.on('click', function(event) {
+
+          // Article visible? Hide.
+            if ($body.hasClass('is-article-visible'))
+              $main._hide(true);
+
+        });
+
+        $window.on('keyup', function(event) {
+
+          switch (event.keyCode) {
+
+            case 27:
+
+              // Article visible? Hide.
+                if ($body.hasClass('is-article-visible'))
+                  $main._hide(true);
+
+              break;
+
+            default:
+              break;
+
+          }
+
+        });
+
+        $window.on('hashchange', function(event) {
+
+          // Empty hash?
+            if (location.hash == ''
+            ||  location.hash == '#') {
+
+              // Prevent default.
+                event.preventDefault();
+                event.stopPropagation();
+
+              // Hide.
+                $main._hide();
+
+            }
+
+          // Otherwise, check for a matching article.
+            else if ($main_articles.filter(location.hash).length > 0) {
+
+              // Prevent default.
+                event.preventDefault();
+                event.stopPropagation();
+
+              // Show article.
+                $main._show(location.hash.substr(1));
+
+            }
+
+        });
+
+      // Scroll restoration.
+      // This prevents the page from scrolling back to the top on a hashchange.
+        if ('scrollRestoration' in history)
+          history.scrollRestoration = 'manual';
+        else {
+
+          var oldScrollPos = 0,
+            scrollPos = 0,
+            $htmlbody = $('html,body');
+
+          $window
+            .on('scroll', function() {
+
+              oldScrollPos = scrollPos;
+              scrollPos = $htmlbody.scrollTop();
+
+            })
+            .on('hashchange', function() {
+              $window.scrollTop(oldScrollPos);
+            });
+
+        }
+
+      // Initialize.
+
+        // Hide main, articles.
+          $main.hide();
+          $main_articles.hide();
+
+        // Initial article.
+          if (location.hash != ''
+          &&  location.hash != '#')
+            $window.on('load', function() {
+              $main._show(location.hash.substr(1), true);
+            });
+
+  });
+
+})(jQuery);
