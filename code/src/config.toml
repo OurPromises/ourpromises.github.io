@@ -12,7 +12,7 @@ disableRSS = true
   description = '<!--[-->To use technology and media to create simple solutions and promote new, creative ideas in communities everywhere. <!--]--><br />Work to help inspire, inform, and educate young people and those in need. <!--]--><br />THAT’S OUR PROMISE.
                 <!--[--></a> <!--]-->'
   logo = "fa-diamond"
-  copyright = "OurPromisesIO"
+  copyright = OurPromisesIO"
 
 [[params.social]]
   medium = "twitter"
