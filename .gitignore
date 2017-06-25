@@ -34,3 +34,4 @@ node_modules
 .env
 .note
 ./code/src/public
+docs/sass
