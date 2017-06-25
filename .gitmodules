@@ -1,0 +1,3 @@
+[submodule "code/src/themes/dimension"]
+	path = code/src/themes/dimension
+	url = https://github.com/sethmacleod/dimension.git
