@@ -1,16 +1,57 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-	
-	<sitemap>
-	   	<loc>http://www.ourpromises.io/en/sitemap.xml</loc>
-		
-	</sitemap>
-	
-	<sitemap>
-	   	<loc>http://www.ourpromises.io/de/sitemap.xml</loc>
-		
-	   	<lastmod>2017-03-02T11:59:27-05:00</lastmod>
-		
-	</sitemap>
-	
-</sitemapindex>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  
+  <url>
+    <loc>http://www.ourpromises.io/#intro.de</loc>
+    <lastmod>2017-03-02T10:54:38-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://www.ourpromises.io/#intro</loc>
+  </url>
+  
+  <url>
+    <loc>http://www.ourpromises.io/#work.de</loc>
+    <lastmod>2017-03-02T11:59:05-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://www.ourpromises.io/#work</loc>
+  </url>
+  
+  <url>
+    <loc>http://www.ourpromises.io/#about.de</loc>
+    <lastmod>2017-03-02T11:59:21-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://www.ourpromises.io/#about</loc>
+  </url>
+  
+  <url>
+    <loc>http://www.ourpromises.io/#contact.de</loc>
+    <lastmod>2017-03-02T11:59:27-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://www.ourpromises.io/#contact</loc>
+  </url>
+  
+  <url>
+    <loc>http://www.ourpromises.io/#</loc>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.ourpromises.io/#</loc>
+    <lastmod>2017-03-02T10:54:38-05:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.ourpromises.io/#</loc>
+    <priority>0</priority>
+  </url>
+  
+</urlset>
