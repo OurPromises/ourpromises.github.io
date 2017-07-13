@@ -1,3 +1,4 @@
+
 # Logs
 logs
 *.log
@@ -34,4 +35,5 @@ node_modules
 .env
 .note
 ./code/src/public
-docs/sass
+sass
+de
