@@ -17,7 +17,7 @@ disableRSS = true
 [[params.social]]
   medium = "twitter"
   icon = "twitter"
-  link = "#"
+  link = "https://www.twitter.com"
 
 [[params.social]]
   medium = "facebook"
@@ -39,4 +39,3 @@ disableRSS = true
 languageName = "English"
 weight = 1
 title = "Our Promises"
-
